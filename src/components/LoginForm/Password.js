@@ -1,23 +1,23 @@
-import React, { useContext } from 'react'
-
-import { LoginContext } from '../../context/LoginContext'
+import { useSelector, useDispatch } from 'react-redux'
+import { SET_PASSWORD } from '../../data/actions/login'
 
 export default function Password() {
-    const { passwordContext, loginDispatch } = useContext(LoginContext)
+    const password = useSelector((state) => state.password)
+    const dispatch = useDispatch()
 
     return (
         <>
             <input
                 type="text"
-                value={passwordContext}
+                value={password}
                 onChange={(e) => {
-                    loginDispatch({
+                    dispatch({
                         type: 'SET_PASSWORD',
                         value: e.target.value,
                     })
                 }}
             />
-            <div>目前password:{passwordContext}</div>
+            <div>目前password:{password}</div>
         </>
     )
 }

@@ -1,23 +1,24 @@
-import React, { useContext } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { SET_ACCOUNT } from '../../data/actions/login'
 
-import { LoginContext } from '../../context/LoginContext'
 
 export default function Account() {
-    const { accountContext, loginDispatch } = useContext(LoginContext)
+    const account = useSelector((state) => state.account)
+    const dispatch = useDispatch()
 
     return (
         <>
             <input
                 type="text"
-                value={accountContext}
+                value={account}
                 onChange={(e) => {
-                    loginDispatch({
+                    dispatch({
                         type: 'SET_ACCOUNT',
                         value: e.target.value,
                     })
                 }}
             />
-            <div>目前account:{accountContext}</div>
+            <div>目前account:{account}</div>
         </>
     )
 }

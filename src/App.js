@@ -1,36 +1,16 @@
 import { HashRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import FormPage from './routes/FormPage';
 import MenuPage from './routes/MenuPage';
 
-import { useReducer } from 'react';
-import { LoginContext } from './context/LoginContext'
-
-const initLoginInfo = {
-  accountContext: '',
-  passwordContext: ''
-}
-
-const loginInfoReducer = function (state, action) {
-  const stateNext = Object.assign({}, state)
-
-  switch (action.type) {
-    case 'SET_ACCOUNT':
-      stateNext.accountContext = action.value
-      return stateNext;
-    case 'SET_PASSWORD':
-      stateNext.passwordContext = action.value
-      return stateNext;
-    default:
-      return state
-  }
-}
+import { Provider } from 'react-redux';
+import store from './data/store'
 
 function Layout(props) {
-  const [loginInfo, loginInfoDispatch] = useReducer(
-    loginInfoReducer,
-    initLoginInfo
-  )
+  //使用react-redux和useSelector
+  const account = useSelector((state) => state.account)
+  const password = useSelector((state) => state.password)
 
   return (
     <>
@@ -40,19 +20,11 @@ function Layout(props) {
           點我連到第二頁
         </Link>
         <br />
-        <span>目前登入帳號：{loginInfo.accountContext}</span>
+        <span>目前登入帳號：{account}</span>
         <br />
-        <span>目前登入密碼：{loginInfo.passwordContext}</span>
+        <span>目前登入密碼：{password}</span>
       </nav>
-      <LoginContext.Provider
-        value={{
-          accountContext: loginInfo.accountContext,
-          passwordContext: loginInfo.passwordContext,
-          loginDispatch: loginInfoDispatch,
-        }}
-      >
-        {props.children}
-      </LoginContext.Provider>
+      {props.children}
     </>
   )
 }
@@ -60,16 +32,18 @@ function Layout(props) {
 function App() {
 
   return (
-    <Router>
-      <Layout>
-        <Routes>
-          <Route exact path="/" element={<MenuPage />}>
-          </Route>
-          <Route path="/form" element={<FormPage />}>
-          </Route>
-        </Routes>
-      </Layout>
-    </Router >
+    <Provider store={store}>
+      <Router>
+        <Layout>
+          <Routes>
+            <Route exact path="/" element={<MenuPage />}>
+            </Route>
+            <Route path="/form" element={<FormPage />}>
+            </Route>
+          </Routes>
+        </Layout>
+      </Router >
+    </Provider>
   )
 }
 
